@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechEscape: Інформатика 9 клас</title>
+    <style>
+        :root {
+            --header-bg: #221F3B;
+            --main-bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --primary: #5B4EBE;
+            --primary-light: #ECEBFA;
+            --text-dark: #1E1B4B;
+            --text-muted: #64748B;
+            --accent-green: #10B981;
+            --border-color: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        /* ХЕДЕР (Як у прикладі) */
+        header {
+            background-color: var(--header-bg);
+            color: #FFFFFF;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header-tag {
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #A5B4FC;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            max-width: 650px;
+            margin: 0 auto;
+            color: #C7D2FE;
+            font-size: 0.95rem;
+        }
+
+        /* ОСНОВНИЙ КОНТЕЙНЕР МАКЕТА */
+        .layout-container {
+            max-width: 1100px;
+            margin: -20px auto 40px auto;
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+        }
+
+        /* ЛІВЕ МЕНЮ НАВІГАЦІЇ ТА ПРОГРЕСУ */
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .avatar-box {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #A5B4FC, #6366F1);
+            border-radius: 20px;
+            margin: 0 auto 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .progress-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-item button {
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: none;
+            background: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item button:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-item button.active {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        .sidebar-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* ПРАВА ЧАСТИНА - КОНТЕНТ ЗАДАЧ */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .task-panel {
+            display: none; /* Перемикається скріптом */
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .task-panel.active {
+            display: block;
+        }
+
+        .task-meta {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .task-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .task-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        .task-desc {
+            font-size: 0.92rem;
+            color: #334155;
+        }
+
+        .task-desc svg {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin: 12px 0 16px 0;
+            transition: background 0.2s;
+        }
+
+        .btn-link:hover {
+            background-color: #DDD9F8;
+        }
+
+        /* СТАТИЧНА ФОРМА ПЕРЕД ОЧИМА (Right Sticky Form) */
+        .form-box {
+            background: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .form-box h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #CBD5E1;
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--accent-green);
+            color: #FFFFFF;
+            font-weight: 700;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        /* АДАПТИВНІСТЬ ДЛЯ СМАРТФОНІВ */
+        @media (max-width: 850px) {
+            .layout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-box {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ХЕДЕР УРОКУ -->
+    <header>
+        <div class="header-tag">9 КЛАС · ІНТЕРАКТИВНИЙ УРОК · 25 ХВ</div>
+        <h1>TechEscape: Порятунок документів ✨</h1>
+        <p>Обирай рівень складності, відкривай матеріали в Google Docs та надсилай розв'язки безпосередньо зі свого смартфона.</p>
+    </header>
+
+    <!-- ОСНОВНА ОБЛАСТЬ -->
+    <div class="layout-container">
+        
+        <!-- ЛІВА НАВІГАЦІЙНА ПАНЕЛЬ -->
+        <aside class="sidebar">
+            <div class="avatar-box">📄</div>
+            <div class="progress-title" id="progressText">Обрано рівень 1 із 3</div>
+            
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <button class="active" onclick="showTask(1)">1. Рятівник форматів</button>
+                </li>
+                <li class="nav-item">
+                    <button onclick="showTask(2)">2. Детектив об'єктів</button>
+                </li>
+                <li class="nav-item">
+                    <button onclick="showTask(3)">3. Майстер режимів</button>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                💡 <b>Порада:</b> Ти можеш виконати будь-яке 1 завдання або розв'язати декілька, щоб отримати вищий бал!
+            </div>
+        </aside>
+
+        <!-- ПРАВА ЧАСТИНА З ЗАВДАННЯМИ -->
+        <main class="main-content">
+
+            <!-- РІВЕНЬ 1 -->
+            <div class="task-panel active" id="task1">
+                <div class="task-meta">01 · РІВЕНЬ 1 · ПРОСТИЙ</div>
+                <h2 class="task-title">Хаос у видавництві (.TXT vs .PDF)</h2>
+                
+                <div class="task-grid">
+                    <div class="task-desc">
+                        <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="400" height="180" fill="#1E1E2E" rx="8"/>
+                            <rect x="30" y="30" width="80" height="100" fill="#313244" rx="4"/>
+                            <text x="70" y="85" fill="#A6ADC8" font-size="14" text-anchor="middle" font-weight="bold">.TXT</text>
+                            <path d="M130 80 L170 80 L160 70 M170 80 L160 90" stroke="#FAB387" stroke-width="3" stroke-linecap="round"/>
+                            <rect x="190" y="30" width="80" height="100" fill="#2563EB" rx="4"/>
+                            <text x="230" y="85" fill="#FFFFFF" font-size="14" text-anchor="middle" font-weight="bold">.PDF</text>
+                            <circle cx="330" cy="80" r="30" fill="#A6E3A1"/>
+                            <path d="M320 80 L328 88 L342 72" stroke="#11111B" stroke-width="4" stroke-linecap="round" fill="none"/>
+                            <text x="200" y="155" fill="#CDD6F4" font-size="12" text-anchor="middle">Збереження форматування</text>
+                        </svg>
+
+                        <p>Автор надіслав документ, але шрифт «поплив», а зображення зникли, бо файл зберегли у звичайному блокноті (.txt). Тобі потрібно з'ясувати, який формат розв'яже цю проблему.</p>
+                        
+                        <a href="https://docs.google.com/document/d/1_SAMPLE_DOC_1/edit" target="_blank" class="btn-link">📁 Відкрити Документ №1 у Google Docs</a>
+                        
+                        <p><b>Запитання:</b> У який формат слід перезберегти документ, щоб він виглядав однаково на всіх смартфонах та ПК, зберігаючи всі елементи оформлення?</p>
+                    </div>
+
+                    <!-- Форма відповіді для Завдання 1 -->
+                    <div class="form-box">
+                        <h3>✉️ Відповідь на Завдання 1</h3>
+                        <form action="https://api.web3forms.com/submit" method="POST">
+                            <input type="hidden" name="access_key" value="c9ea7270-d092-4fff-a7ab-6e5d5dd89c2e">
+                            <input type="hidden" name="subject" value="Відповідь: Завдання 1 (Рівень 1)">
+                            <input type="checkbox" name="botcheck" style="display: none;">
+
+                            <div class="form-group">
+                                <label for="st_name_1">Ім'я та Прізвище:</label>
+                                <input type="text" id="st_name_1" name="student_name" placeholder="Іван Іванов" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ans_1">Твій розв'язок:</label>
+                                <textarea id="ans_1" name="answer" rows="4" placeholder="Вкажи формат та обґрунтування..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">🚀 Надіслати 1 рівень</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- РІВЕНЬ 2 -->
+            <div class="task-panel" id="task2">
+                <div class="task-meta">02 · РІВЕНЬ 2 · СЕРЕДНІЙ</div>
+                <h2 class="task-title">Знайди помилку в оформленні</h2>
+                
+                <div class="task-grid">
+                    <div class="task-desc">
+                        <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="400" height="180" fill="#181825" rx="8"/>
+                            <rect x="40" y="25" width="320" height="130" fill="#1E1E2E" stroke="#45475A" stroke-width="2" rx="6"/>
+                            <rect x="60" y="45" width="120" height="12" fill="#89B4FA" rx="3"/>
+                            <rect x="60" y="65" width="200" height="8" fill="#A6ADC8" rx="2"/>
+                            <rect x="60" y="78" width="180" height="8" fill="#A6ADC8" rx="2"/>
+                            <rect x="60" y="91" width="150" height="8" fill="#A6ADC8" rx="2"/>
+                            <rect x="230" y="110" width="110" height="30" fill="#F38BA8" rx="4" opacity="0.8"/>
+                            <text x="285" y="130" fill="#11111B" font-size="10" text-anchor="middle" font-weight="bold">Абзац / Символ?</text>
+                        </svg>
+
+                        <p>У тексті статті порушено форматування: заголовок зливається з абзацами, а міжрядковий інтервал занадто великий.</p>
+                        
+                        <a href="https://docs.google.com/document/d/1_SAMPLE_DOC_2/edit" target="_blank" class="btn-link">📁 Відкрити Документ №2 у Google Docs</a>
+                        
+                        <p><b>Запитання:</b> Назви 2 властивості об'єкта <i>«Абзац»</i> та 1 властивість об'єкта <i>«Символ»</i>, які потрібно змінити для виправлення документа.</p>
+                    </div>
+
+                    <!-- Форма відповіді для Завдання 2 -->
+                    <div class="form-box">
+                        <h3>✉️ Відповідь на Завдання 2</h3>
+                        <form action="https://api.web3forms.com/submit" method="POST">
+                            <input type="hidden" name="access_key" value="c9ea7270-d092-4fff-a7ab-6e5d5dd89c2e">
+                            <input type="hidden" name="subject" value="Відповідь: Завдання 2 (Рівень 2)">
+                            <input type="checkbox" name="botcheck" style="display: none;">
+
+                            <div class="form-group">
+                                <label for="st_name_2">Ім'я та Прізвище:</label>
+                                <input type="text" id="st_name_2" name="student_name" placeholder="Іван Іванов" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ans_2">Твій розв'язок:</label>
+                                <textarea id="ans_2" name="answer" rows="4" placeholder="Перелічи властивості..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">🚀 Надіслати 2 рівень</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- РІВЕНЬ 3 -->
+            <div class="task-panel" id="task3">
+                <div class="task-meta">03 · РІВЕНЬ 3 · ПРОФІ</div>
+                <h2 class="task-title">Синхронне порівняння документів</h2>
+                
+                <div class="task-grid">
+                    <div class="task-desc">
+                        <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="400" height="180" fill="#11111B" rx="8"/>
+                            <rect x="50" y="30" width="130" height="120" fill="#181825" stroke="#89B4FA" stroke-width="2" rx="4"/>
+                            <rect x="220" y="30" width="130" height="120" fill="#181825" stroke="#F9E2AF" stroke-width="2" rx="4"/>
+                            <path d="M185 90 L215 90" stroke="#A6E3A1" stroke-width="3" stroke-dasharray="4"/>
+                            <text x="115" y="95" fill="#89B4FA" font-size="12" text-anchor="middle">Документ А</text>
+                            <text x="285" y="95" fill="#F9E2AF" font-size="12" text-anchor="middle">Документ Б</text>
+                        </svg>
+
+                        <p>У тебе є дві версії документа. Потрібно знайти відмінності в тексті без виснажливого перемикання між файлами.</p>
+                        
+                        <a href="https://docs.google.com/document/d/1_SAMPLE_DOC_3/edit" target="_blank" class="btn-link">📁 Відкрити Документ №3 у Google Docs</a>
+                        
+                        <p><b>Запитання:</b> Які функції або режими перегляду в текстовому процесорі дозволяють бачити два фрагменти або два документи одночасно поруч?</p>
+                    </div>
+
+                    <!-- Форма відповіді для Завдання 3 -->
+                    <div class="form-box">
+                        <h3>✉️ Відповідь на Завдання 3</h3>
+                        <form action="https://api.web3forms.com/submit" method="POST">
+                            <input type="hidden" name="access_key" value="c9ea7270-d092-4fff-a7ab-6e5d5dd89c2e">
+                            <input type="hidden" name="subject" value="Відповідь: Завдання 3 (Рівень 3)">
+                            <input type="checkbox" name="botcheck" style="display: none;">
+
+                            <div class="form-group">
+                                <label for="st_name_3">Ім'я та Прізвище:</label>
+                                <input type="text" id="st_name_3" name="student_name" placeholder="Іван Іванов" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ans_3">Твій розв'язок:</label>
+                                <textarea id="ans_3" name="answer" rows="4" placeholder="Вкажи назву режимів/команд..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">🚀 Надіслати 3 рівень</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- СКРИПТ ПЕРЕМИКАННЯ ВКЛАДОК -->
+    <script>
+        function showTask(taskIndex) {
+            // Приховати всі завдання
+            document.querySelectorAll('.task-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            // Зняти активний клас з кнопок
+            document.querySelectorAll('.nav-item button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Показати вибране завдання
+            document.getElementById('task' + taskIndex).classList.add('active');
+            // Зробити кнопку активною
+            document.querySelectorAll('.nav-item button')[taskIndex - 1].classList.add('active');
+
+            // Оновити текстовий прогрес ліворуч
+            document.getElementById('progressText').innerText = `Обрано рівень ${taskIndex} із 3`;
+        }
+    </script>
+
+</body>
+</html>
