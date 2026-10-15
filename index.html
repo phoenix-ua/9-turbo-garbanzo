@@ -30,7 +30,7 @@
             line-height: 1.5;
         }
 
-        /* ХЕДЕР (Як у прикладі) */
+        /* ХЕДЕР УРОКУ */
         header {
             background-color: var(--header-bg);
             color: #FFFFFF;
@@ -70,7 +70,7 @@
             gap: 24px;
         }
 
-        /* ЛІВЕ МЕНЮ НАВІГАЦІЇ ТА ПРОГРЕСУ */
+        /* ЛІВА НАВІГАЦІЙНА ПАНЕЛЬ */
         .sidebar {
             background: var(--card-bg);
             border-radius: 16px;
@@ -132,6 +132,15 @@
             color: #FFFFFF;
         }
 
+        .nav-item button.completed {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .nav-item button .status-icon {
+            float: right;
+            font-weight: bold;
+        }
+
         .sidebar-footer {
             margin-top: 20px;
             padding-top: 16px;
@@ -148,7 +157,7 @@
         }
 
         .task-panel {
-            display: none; /* Перемикається скріптом */
+            display: none;
             background: var(--card-bg);
             border-radius: 16px;
             padding: 24px;
@@ -210,7 +219,7 @@
             background-color: #DDD9F8;
         }
 
-        /* СТАТИЧНА ФОРМА ПЕРЕД ОЧИМА (Right Sticky Form) */
+        /* СТАТИЧНА ФОРМА ПЕРЕД ОЧИМА (Sticky) */
         .form-box {
             background: #F8FAFC;
             border: 1px solid var(--border-color);
@@ -270,6 +279,11 @@
 
         .btn-submit:hover {
             opacity: 0.9;
+        }
+
+        .btn-submit:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
         }
 
         /* АДАПТИВНІСТЬ ДЛЯ СМАРТФОНІВ */
@@ -360,7 +374,7 @@
                     <!-- Форма відповіді для Завдання 1 -->
                     <div class="form-box">
                         <h3>✉️ Відповідь на Завдання 1</h3>
-                        <form action="https://api.web3forms.com/submit" method="POST">
+                        <form onsubmit="submitTask(event, 1)">
                             <input type="hidden" name="access_key" value="c9ea7270-d092-4fff-a7ab-6e5d5dd89c2e">
                             <input type="hidden" name="subject" value="Відповідь: Завдання 1 (Рівень 1)">
                             <input type="checkbox" name="botcheck" style="display: none;">
@@ -373,7 +387,7 @@
                                 <label for="ans_1">Твій розв'язок:</label>
                                 <textarea id="ans_1" name="answer" rows="4" placeholder="Вкажи формат та обґрунтування..." required></textarea>
                             </div>
-                            <button type="submit" class="btn-submit">🚀 Надіслати 1 рівень</button>
+                            <button type="submit" class="btn-submit" id="btn-1">🚀 Надіслати 1 рівень</button>
                         </form>
                     </div>
                 </div>
@@ -407,7 +421,7 @@
                     <!-- Форма відповіді для Завдання 2 -->
                     <div class="form-box">
                         <h3>✉️ Відповідь на Завдання 2</h3>
-                        <form action="https://api.web3forms.com/submit" method="POST">
+                        <form onsubmit="submitTask(event, 2)">
                             <input type="hidden" name="access_key" value="c9ea7270-d092-4fff-a7ab-6e5d5dd89c2e">
                             <input type="hidden" name="subject" value="Відповідь: Завдання 2 (Рівень 2)">
                             <input type="checkbox" name="botcheck" style="display: none;">
@@ -420,7 +434,7 @@
                                 <label for="ans_2">Твій розв'язок:</label>
                                 <textarea id="ans_2" name="answer" rows="4" placeholder="Перелічи властивості..." required></textarea>
                             </div>
-                            <button type="submit" class="btn-submit">🚀 Надіслати 2 рівень</button>
+                            <button type="submit" class="btn-submit" id="btn-2">🚀 Надіслати 2 рівень</button>
                         </form>
                     </div>
                 </div>
@@ -452,7 +466,7 @@
                     <!-- Форма відповіді для Завдання 3 -->
                     <div class="form-box">
                         <h3>✉️ Відповідь на Завдання 3</h3>
-                        <form action="https://api.web3forms.com/submit" method="POST">
+                        <form onsubmit="submitTask(event, 3)">
                             <input type="hidden" name="access_key" value="c9ea7270-d092-4fff-a7ab-6e5d5dd89c2e">
                             <input type="hidden" name="subject" value="Відповідь: Завдання 3 (Рівень 3)">
                             <input type="checkbox" name="botcheck" style="display: none;">
@@ -465,7 +479,7 @@
                                 <label for="ans_3">Твій розв'язок:</label>
                                 <textarea id="ans_3" name="answer" rows="4" placeholder="Вкажи назву режимів/команд..." required></textarea>
                             </div>
-                            <button type="submit" class="btn-submit">🚀 Надіслати 3 рівень</button>
+                            <button type="submit" class="btn-submit" id="btn-3">🚀 Надіслати 3 рівень</button>
                         </form>
                     </div>
                 </div>
@@ -474,27 +488,11 @@
         </main>
     </div>
 
-    <!-- СКРИПТ ПЕРЕМИКАННЯ ВКЛАДОК -->
+    <!-- СКРИПТ УПРАВЛІННЯ ВІДОБРАЖЕННЯМ ТА ПРОГРЕСОМ -->
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            updateProgressUI();
+        });
+
         function showTask(taskIndex) {
-            // Приховати всі завдання
-            document.querySelectorAll('.task-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
-            // Зняти активний клас з кнопок
-            document.querySelectorAll('.nav-item button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Показати вибране завдання
-            document.getElementById('task' + taskIndex).classList.add('active');
-            // Зробити кнопку активною
-            document.querySelectorAll('.nav-item button')[taskIndex - 1].classList.add('active');
-
-            // Оновити текстовий прогрес ліворуч
-            document.getElementById('progressText').innerText = `Обрано рівень ${taskIndex} із 3`;
-        }
-    </script>
-
-</body>
-</html>
+            document.
